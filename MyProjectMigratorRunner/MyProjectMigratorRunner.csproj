@@ -4,15 +4,16 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{2D56223D-5D9A-469A-A40D-2B19C04A96F8}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <ProjectGuid>{311FF55F-A56D-493F-9F16-1E96DEA76EFD}</ProjectGuid>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>MyProject.Data.Migrations</RootNamespace>
-    <AssemblyName>MyProject.Data.Migrations</AssemblyName>
+    <RootNamespace>MyProjectMigratorRunner</RootNamespace>
+    <AssemblyName>MyProjectMigratorRunner</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -22,6 +23,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -45,17 +47,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="1.0.0.0\01 - RunBaselineScript.cs" />
-    <Compile Include="1.0.1.0\201410192200 - CreateTestTable.cs" />
-    <Compile Include="1.0.1.0\201410192210 - AddColumnTestToTableTest.cs" />
-    <Compile Include="1.0.1.0\201410192215 - CreateTestTableSeedData.cs" />
-    <Compile Include="MyProjectMigrator.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\MyProject.Data.Migrations\MyProject.Data.Migrations.csproj">
+      <Project>{2d56223d-5d9a-469a-a40d-2b19c04a96f8}</Project>
+      <Name>MyProject.Data.Migrations</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

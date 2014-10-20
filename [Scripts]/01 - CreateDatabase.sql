@@ -1,0 +1,132 @@
+USE [master]
+GO
+
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'MyProject') DROP DATABASE [MyProject]
+GO
+
+IF EXISTS (SELECT name FROM sys.databases WHERE name = N'MyProject')
+begin
+    --mata todas as conexões
+    ALTER DATABASE [MyProject] SET SINGLE_USER WITH ROLLBACK IMMEDIATE
+    --apaga o banco existente
+    DROP DATABASE [MyProject]
+end
+
+declare @DataFileLocation varchar(max)
+
+SELECT @DataFileLocation = SUBSTRING(physical_name, 1, CHARINDEX(N'master.mdf', LOWER(physical_name)) - 1)
+FROM master.sys.master_files
+WHERE database_id = 1 AND FILE_ID = 1
+
+declare @createDatabaseScript varchar(max)
+set @createDatabaseScript = 'CREATE DATABASE [MyProject] ON PRIMARY (NAME = N''MyProject'', FILENAME = ''' + @DataFileLocation + 'MyProject.mdf'', SIZE = 5120KB, MAXSIZE = UNLIMITED, FILEGROWTH = 1024KB ) LOG ON (NAME = N''MyProject_log'', FILENAME = ''' + @DataFileLocation + 'MyProject_log.ldf'', SIZE = 1024KB, MAXSIZE = 2048GB, FILEGROWTH = 10%)'
+EXECUTE (@createDatabaseScript)
+
+ALTER DATABASE [MyProject] SET COMPATIBILITY_LEVEL = 100
+GO
+
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [MyProject].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+
+ALTER DATABASE [MyProject] SET ANSI_NULL_DEFAULT OFF 
+GO
+
+ALTER DATABASE [MyProject] SET ANSI_NULLS OFF 
+GO
+
+ALTER DATABASE [MyProject] SET ANSI_PADDING OFF 
+GO
+
+ALTER DATABASE [MyProject] SET ANSI_WARNINGS OFF 
+GO
+
+ALTER DATABASE [MyProject] SET ARITHABORT OFF 
+GO
+
+ALTER DATABASE [MyProject] SET AUTO_CLOSE OFF 
+GO
+
+ALTER DATABASE [MyProject] SET AUTO_CREATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [MyProject] SET AUTO_SHRINK OFF 
+GO
+
+ALTER DATABASE [MyProject] SET AUTO_UPDATE_STATISTICS ON 
+GO
+
+ALTER DATABASE [MyProject] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+
+ALTER DATABASE [MyProject] SET CURSOR_DEFAULT  GLOBAL 
+GO
+
+ALTER DATABASE [MyProject] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+
+ALTER DATABASE [MyProject] SET NUMERIC_ROUNDABORT OFF 
+GO
+
+ALTER DATABASE [MyProject] SET QUOTED_IDENTIFIER OFF 
+GO
+
+ALTER DATABASE [MyProject] SET RECURSIVE_TRIGGERS OFF 
+GO
+
+ALTER DATABASE [MyProject] SET  DISABLE_BROKER 
+GO
+
+ALTER DATABASE [MyProject] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+
+ALTER DATABASE [MyProject] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+
+ALTER DATABASE [MyProject] SET TRUSTWORTHY OFF 
+GO
+
+ALTER DATABASE [MyProject] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+
+ALTER DATABASE [MyProject] SET PARAMETERIZATION SIMPLE 
+GO
+
+ALTER DATABASE [MyProject] SET READ_COMMITTED_SNAPSHOT OFF 
+GO
+
+ALTER DATABASE [MyProject] SET HONOR_BROKER_PRIORITY OFF 
+GO
+
+ALTER DATABASE [MyProject] SET  READ_WRITE 
+GO
+
+ALTER DATABASE [MyProject] SET RECOVERY FULL 
+GO
+
+ALTER DATABASE [MyProject] SET  MULTI_USER 
+GO
+
+ALTER DATABASE [MyProject] SET PAGE_VERIFY CHECKSUM  
+GO
+
+ALTER DATABASE [MyProject] SET DB_CHAINING OFF 
+GO
+
+IF  EXISTS (SELECT * FROM sys.server_principals WHERE name = N'myprojectuser')
+DROP LOGIN [myprojectuser]
+GO
+
+CREATE LOGIN [myprojectuser] WITH PASSWORD=N'MyProjectPassword', DEFAULT_DATABASE=[MyProject], DEFAULT_LANGUAGE=[us_english], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+GO
+
+USE [MyProject]
+GO
+CREATE USER [myprojectuser] FOR LOGIN [myprojectuser]
+GO
+USE [MyProject]
+GO
+EXEC sp_addrolemember N'db_owner', N'myprojectuser'
+GO
