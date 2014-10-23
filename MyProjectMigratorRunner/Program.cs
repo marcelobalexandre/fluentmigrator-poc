@@ -18,8 +18,8 @@ namespace MyProjectMigratorRunner
             try
             {
                 MyProjectMigrator.Migrate(migrationRunner => migrationRunner.MigrateUp(),
-                                      connectionString,
-                                      environment);
+                                          connectionString,
+                                          environment);
 
                 Console.WriteLine("Finished migration.");
                 Console.Read();

@@ -9,7 +9,7 @@ namespace MyProject.Data.Migrations._1._0._0._0
     {
         public override void Up()
         {
-            Execute.Script(Path.Combine(Environment.CurrentDirectory, @"Scripts\02 - BaselineScrit.sql"));
+            Execute.Script(Path.Combine(Environment.CurrentDirectory, @"Scripts\02 - BaselineScript.sql"));
         }
 
         public override void Down()
